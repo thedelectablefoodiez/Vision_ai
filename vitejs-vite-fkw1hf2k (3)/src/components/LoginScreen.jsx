@@ -1,7 +1,16 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import useResponsive from "./hooks/useResponsive"; // adjust path as needed
 
 // ---------------- Arc Reactor Ring ----------------
-function SolidArcRing({ radius, strokeWidth, color, startAngle, arcLength, rotationDuration, reverse }) {
+function SolidArcRing({
+  radius,
+  strokeWidth,
+  color,
+  startAngle,
+  arcLength,
+  rotationDuration,
+  reverse,
+}) {
   const circumference = 2 * Math.PI * radius;
   const arcPercent = arcLength / 360;
 
@@ -63,14 +72,19 @@ function OrbitDot({ radius, size, duration, delay, color }) {
 
 // ---------------- Main Component ----------------
 export default function LoginWithBootAndReactor() {
-  const steps = useMemo(() => [
-    "Powering Up Core Systems...",
-    "Establishing Secure Neural Link...",
-    "Running System Diagnostics...",
-    "Authenticating User...",
-    "Compiling Intelligence Modules...",
-    "System Online.",
-  ], []);
+  const { isMobile, isTablet, isDesktop } = useResponsive();
+
+  const steps = useMemo(
+    () => [
+      "Powering Up Core Systems...",
+      "Establishing Secure Neural Link...",
+      "Running System Diagnostics...",
+      "Authenticating User...",
+      "Compiling Intelligence Modules...",
+      "System Online.",
+    ],
+    []
+  );
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [bootStarted, setBootStarted] = useState(false);
@@ -142,7 +156,17 @@ export default function LoginWithBootAndReactor() {
     };
   }, [bootStarted, steps]);
 
-  const baseRadius = 110;
+  // Responsive sizes and font sizes
+  const baseRadius = isMobile ? 80 : isTablet ? 100 : 110;
+  const containerSize = baseRadius * 4.7; // approx 520 for desktop, scaled down for smaller
+
+  // Login panel sizing
+  const loginWidth = isMobile ? "90vw" : isTablet ? 360 : 400;
+  const loginPadding = isMobile ? 24 : 32;
+  const loginFontSize = isMobile ? 18 : 20;
+  const inputFontSize = isMobile ? 14 : 16;
+  const buttonFontSize = isMobile ? 16 : 18;
+  const buttonPadding = isMobile ? 12 : 16;
 
   return (
     <div
@@ -157,20 +181,51 @@ export default function LoginWithBootAndReactor() {
         flexDirection: "column",
         overflow: "hidden",
         color: "#00fff7",
+        padding: isMobile ? "1rem 0.5rem" : "0",
       }}
     >
       <audio ref={audioRef} src="/startup.mp3" preload="auto" />
 
       {/* Arc Reactor */}
       {bootStarted && (
-        <div style={{ position: "absolute", width: 520, height: 520 }}>
-          <SolidArcRing radius={baseRadius} strokeWidth={8} color="#00fff7" startAngle={0} arcLength={110} rotationDuration={50} reverse={false} />
-          <SolidArcRing radius={baseRadius + 30} strokeWidth={6} color="#009999" startAngle={90} arcLength={180} rotationDuration={65} reverse={true} />
-          <SolidArcRing radius={baseRadius + 60} strokeWidth={4} color="#00cccc" startAngle={180} arcLength={90} rotationDuration={40} reverse={false} />
+        <div
+          style={{
+            position: "absolute",
+            width: containerSize,
+            height: containerSize,
+          }}
+        >
+          <SolidArcRing
+            radius={baseRadius}
+            strokeWidth={isMobile ? 5 : 8}
+            color="#00fff7"
+            startAngle={0}
+            arcLength={110}
+            rotationDuration={50}
+            reverse={false}
+          />
+          <SolidArcRing
+            radius={baseRadius + (isMobile ? 20 : 30)}
+            strokeWidth={isMobile ? 4 : 6}
+            color="#009999"
+            startAngle={90}
+            arcLength={180}
+            rotationDuration={65}
+            reverse={true}
+          />
+          <SolidArcRing
+            radius={baseRadius + (isMobile ? 40 : 60)}
+            strokeWidth={isMobile ? 3 : 4}
+            color="#00cccc"
+            startAngle={180}
+            arcLength={90}
+            rotationDuration={40}
+            reverse={false}
+          />
 
           <svg
-            width={140}
-            height={140}
+            width={isMobile ? 100 : 140}
+            height={isMobile ? 100 : 140}
             viewBox="0 0 140 140"
             style={{
               position: "absolute",
@@ -190,17 +245,43 @@ export default function LoginWithBootAndReactor() {
             />
             <defs>
               <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="0" dy="0" stdDeviation="10" floodColor="#00fff7" floodOpacity="0.7" />
-                <feDropShadow dx="0" dy="0" stdDeviation="20" floodColor="#00fff7" floodOpacity="0.4" />
+                <feDropShadow
+                  dx="0"
+                  dy="0"
+                  stdDeviation="10"
+                  floodColor="#00fff7"
+                  floodOpacity="0.7"
+                />
+                <feDropShadow
+                  dx="0"
+                  dy="0"
+                  stdDeviation="20"
+                  floodColor="#00fff7"
+                  floodOpacity="0.4"
+                />
               </filter>
             </defs>
           </svg>
 
-          {[...Array(6)].map((_, i) => (
-            <OrbitDot key={`inner-${i}`} radius={baseRadius + 50} size={6} duration={14 + i} delay={i * 1.5} color="#00eaff" />
+          {[...Array(isMobile ? 4 : 6)].map((_, i) => (
+            <OrbitDot
+              key={`inner-${i}`}
+              radius={baseRadius + (isMobile ? 35 : 50)}
+              size={isMobile ? 4 : 6}
+              duration={14 + i}
+              delay={i * 1.5}
+              color="#00eaff"
+            />
           ))}
-          {[...Array(4)].map((_, i) => (
-            <OrbitDot key={`outer-${i}`} radius={baseRadius + 90} size={8} duration={18 + i} delay={i * 1.5} color="#00ffff" />
+          {[...Array(isMobile ? 3 : 4)].map((_, i) => (
+            <OrbitDot
+              key={`outer-${i}`}
+              radius={baseRadius + (isMobile ? 70 : 90)}
+              size={isMobile ? 6 : 8}
+              duration={18 + i}
+              delay={i * 1.5}
+              color="#00ffff"
+            />
           ))}
         </div>
       )}
@@ -210,8 +291,8 @@ export default function LoginWithBootAndReactor() {
         <div
           className={`login-panel ${loginFadeOut ? "fade-out" : ""}`}
           style={{
-            width: 400,
-            padding: 32,
+            width: loginWidth,
+            padding: loginPadding,
             borderRadius: 24,
             backgroundColor: "rgba(0, 0, 0, 0.7)",
             border: "3px solid #00f0ff",
@@ -221,35 +302,79 @@ export default function LoginWithBootAndReactor() {
             transition: "opacity 0.8s ease, transform 0.8s ease",
           }}
         >
-          <h1 style={{ fontSize: 40, marginBottom: 16, color: "#00f0ff" }}>VISION AI LOGIN</h1>
+          <h1
+            style={{
+              fontSize: loginFontSize * 2,
+              marginBottom: 16,
+              color: "#00f0ff",
+              userSelect: "none",
+            }}
+          >
+            VISION AI LOGIN
+          </h1>
           <input
             type="text"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={inputStyle}
+            style={{
+              ...inputStyle,
+              fontSize: inputFontSize,
+              padding: inputFontSize,
+            }}
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
+            style={{
+              ...inputStyle,
+              fontSize: inputFontSize,
+              padding: inputFontSize,
+            }}
           />
-          {error && <div style={{ color: "red", fontWeight: "bold", marginBottom: 8 }}>{error}</div>}
-          <button style={buttonStyle} onClick={handleLogin}>ENTER SYSTEM</button>
+          {error && (
+            <div style={{ color: "red", fontWeight: "bold", marginBottom: 8 }}>
+              {error}
+            </div>
+          )}
+          <button
+            style={{
+              ...buttonStyle,
+              fontSize: buttonFontSize,
+              padding: buttonPadding,
+            }}
+            onClick={handleLogin}
+          >
+            ENTER SYSTEM
+          </button>
         </div>
       )}
 
       {/* Boot Steps & Progress */}
       {bootStarted && (
-        <div style={{ width: 400, marginTop: 40, textAlign: "center", zIndex: 5 }}>
-          <div style={{ fontSize: 18, letterSpacing: "0.12em", marginBottom: 12 }}>
+        <div
+          style={{
+            width: loginWidth,
+            marginTop: isMobile ? 24 : 40,
+            textAlign: "center",
+            zIndex: 5,
+          }}
+        >
+          <div
+            style={{
+              fontSize: isMobile ? 14 : 18,
+              letterSpacing: "0.12em",
+              marginBottom: 12,
+              userSelect: "none",
+            }}
+          >
             {steps[stepIndex]}
           </div>
           <div
             style={{
-              height: 12,
+              height: isMobile ? 8 : 12,
               width: "100%",
               backgroundColor: "#004f4f",
               borderRadius: 6,
@@ -267,7 +392,14 @@ export default function LoginWithBootAndReactor() {
               }}
             />
           </div>
-          <div>{Math.round(Math.min(percentage, 100))}%</div>
+          <div
+            style={{
+              fontSize: isMobile ? 14 : 16,
+              userSelect: "none",
+            }}
+          >
+            {Math.round(Math.min(percentage, 100))}%
+          </div>
         </div>
       )}
 
@@ -301,30 +433,26 @@ export default function LoginWithBootAndReactor() {
         .fade-out {
           opacity: 0;
           transform: scale(0.95);
+          transition: opacity 0.8s ease, transform 0.8s ease;
         }
       `}</style>
     </div>
   );
 }
 
-// ---------------- Input + Button Styles ----------------
 const inputStyle = {
   width: "100%",
-  padding: 14,
-  fontSize: 16,
-  marginBottom: 12,
   borderRadius: 10,
   border: "2px solid #00f0ff",
   backgroundColor: "rgba(0,0,0,0.3)",
   color: "#00eaff",
   fontFamily: "'Courier New', monospace",
   outline: "none",
+  marginBottom: 12,
 };
 
 const buttonStyle = {
   width: "100%",
-  padding: 16,
-  fontSize: 18,
   backgroundColor: "#00f0ff",
   color: "black",
   fontWeight: "bold",

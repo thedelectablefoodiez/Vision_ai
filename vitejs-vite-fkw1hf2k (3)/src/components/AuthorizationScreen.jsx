@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
+import useResponsive from "./hooks/useResponsive"; // Adjust path as needed
 
 export default function AuthorizationScreen({ onComplete }) {
+  const { isMobile, isTablet, isDesktop, width } = useResponsive();
+
   const steps = [
     "Powering Up Core Systems...",
     "Establishing Secure Neural Link...",
@@ -20,7 +23,6 @@ export default function AuthorizationScreen({ onComplete }) {
   const hasPlayedRef = useRef(false);
   const totalBars = 20;
 
-  // 🎧 Play startup sound once when typing begins
   useEffect(() => {
     if (!hasPlayedRef.current && currentStepIndex === 0 && charIndex === 0) {
       hasPlayedRef.current = true;
@@ -33,7 +35,6 @@ export default function AuthorizationScreen({ onComplete }) {
     }
   }, [currentStepIndex, charIndex]);
 
-  // 🧠 Typewriter animation
   useEffect(() => {
     if (currentStepIndex >= steps.length) {
       setTimeout(() => {
@@ -69,6 +70,14 @@ export default function AuthorizationScreen({ onComplete }) {
 
   const barsToFill = Math.floor((percentage / 100) * totalBars);
 
+  // Dynamic font sizes and container widths based on device
+  const fontSize = isMobile ? "1.2rem" : isTablet ? "1.6rem" : "1.8rem";
+  const preHeight = isMobile ? "200px" : isTablet ? "280px" : "300px";
+  const preMaxWidth = isMobile ? "90vw" : "600px";
+  const loadingBarWidth = isMobile ? "90vw" : "520px";
+  const loadingBarHeight = isMobile ? 20 : 28;
+  const gapBetweenElements = isMobile ? "1.5rem" : "2rem";
+
   return (
     <div
       style={{
@@ -82,9 +91,9 @@ export default function AuthorizationScreen({ onComplete }) {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        gap: "2rem",
+        gap: gapBetweenElements,
         overflow: "hidden",
-        padding: "1rem",
+        padding: isMobile ? "0.75rem" : "1rem",
       }}
     >
       {/* Hidden audio element */}
@@ -93,12 +102,12 @@ export default function AuthorizationScreen({ onComplete }) {
       {/* Terminal box */}
       <pre
         style={{
-          fontSize: "1.6rem",
+          fontSize,
           lineHeight: "1.4em",
           whiteSpace: "pre-wrap",
-          maxWidth: "600px",
+          maxWidth: preMaxWidth,
           width: "90%",
-          height: "300px",
+          height: preHeight,
           overflowY: "auto",
           backgroundColor: "rgba(0, 20, 40, 0.8)",
           border: "2px solid #00fff7",
@@ -126,8 +135,8 @@ export default function AuthorizationScreen({ onComplete }) {
         <div
           className={`loading-bar-container ${fadeOut ? "fade-out" : ""}`}
           style={{
-            width: 520,
-            height: 28,
+            width: loadingBarWidth,
+            height: loadingBarHeight,
             borderRadius: 8,
             border: "4px solid #00fff7",
             position: "relative",
@@ -163,7 +172,7 @@ export default function AuthorizationScreen({ onComplete }) {
       {percentage < 100 && (
         <div
           style={{
-            fontSize: "2rem",
+            fontSize: isMobile ? "1.6rem" : "2rem",
             letterSpacing: "0.15em",
             textAlign: "center",
             color: "#00fff7",

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import useResponsive from "./hooks/useResponsive"; // adjust path if needed
 
 function SolidArcRing({ radius, strokeWidth, color, startAngle, arcLength, rotationDuration, reverse }) {
   const circumference = 2 * Math.PI * radius;
@@ -195,7 +196,13 @@ function DoubleRing({ radius, strokeWidth, color, gap, rotationDuration, reverse
 
 // -------- BootScreen Component --------
 export default function BootScreen({ onComplete }) {
-  const baseRadius = 110;
+  const { isMobile, isTablet, isDesktop, width } = useResponsive();
+
+  // Base radius adjusted by screen size for scaling
+  let baseRadius;
+  if (isMobile) baseRadius = width * 0.15; // 15% of viewport width
+  else if (isTablet) baseRadius = width * 0.12;
+  else baseRadius = 110; // default desktop size, fallback
 
   useEffect(() => {
     const bootTimer = setTimeout(() => {
@@ -206,6 +213,9 @@ export default function BootScreen({ onComplete }) {
       clearTimeout(bootTimer);
     };
   }, [onComplete]);
+
+  // Container size scales with baseRadius
+  const containerSize = (baseRadius + 130) * 2; // max ring radius + stroke + gap
 
   return (
     <div
@@ -221,16 +231,65 @@ export default function BootScreen({ onComplete }) {
       }}
       aria-label="Boot Screen with Arc Reactor"
     >
-      <div style={{ position: "relative", width: 520, height: 520 }}>
-        <SolidArcRing radius={baseRadius} strokeWidth={8} color="#00fff7" startAngle={0} arcLength={110} rotationDuration={50} reverse={false} />
-        <DashedRing radius={baseRadius + 30} strokeWidth={3} color="#009999" dashArray="15 25" rotationDuration={65} reverse={true} />
-        <DottedRing radius={baseRadius + 60} strokeWidth={0} color="#00cccc" dotRadius={4} gap={10} rotationDuration={40} reverse={false} />
-        <SegmentedRing radius={baseRadius + 90} strokeWidth={4} color="#006666" segments={10} segmentAngle={12} gapAngle={16} rotationDuration={30} reverse={true} />
-        <DoubleRing radius={baseRadius + 120} strokeWidth={2} color="#004444" gap={6} rotationDuration={45} reverse={false} />
+      <div
+        style={{
+          position: "relative",
+          width: containerSize,
+          height: containerSize,
+          minWidth: 200,
+          minHeight: 200,
+          maxWidth: "90vw",
+          maxHeight: "90vw",
+        }}
+      >
+        <SolidArcRing
+          radius={baseRadius}
+          strokeWidth={8}
+          color="#00fff7"
+          startAngle={0}
+          arcLength={110}
+          rotationDuration={50}
+          reverse={false}
+        />
+        <DashedRing
+          radius={baseRadius + 30}
+          strokeWidth={3}
+          color="#009999"
+          dashArray="15 25"
+          rotationDuration={65}
+          reverse={true}
+        />
+        <DottedRing
+          radius={baseRadius + 60}
+          strokeWidth={0}
+          color="#00cccc"
+          dotRadius={baseRadius * 0.036} // scale dot radius relative to baseRadius
+          gap={baseRadius * 0.09} // scale gap
+          rotationDuration={40}
+          reverse={false}
+        />
+        <SegmentedRing
+          radius={baseRadius + 90}
+          strokeWidth={4}
+          color="#006666"
+          segments={10}
+          segmentAngle={12}
+          gapAngle={16}
+          rotationDuration={30}
+          reverse={true}
+        />
+        <DoubleRing
+          radius={baseRadius + 120}
+          strokeWidth={2}
+          color="#004444"
+          gap={6}
+          rotationDuration={45}
+          reverse={false}
+        />
 
         <svg
-          width={140}
-          height={140}
+          width={baseRadius * 1.27}
+          height={baseRadius * 1.27}
           viewBox="0 0 140 140"
           style={{
             position: "absolute",
@@ -249,7 +308,14 @@ export default function BootScreen({ onComplete }) {
             className="animate-pulse"
           />
           <defs>
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+            <filter
+              id="glow"
+              x="-20%"
+              y="-20%"
+              width="140%"
+              height="140%"
+              colorInterpolationFilters="sRGB"
+            >
               <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#00fff7" floodOpacity="0.8" />
               <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#00fff7" floodOpacity="0.6" />
             </filter>
