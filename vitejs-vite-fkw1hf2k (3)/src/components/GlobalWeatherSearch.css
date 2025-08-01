@@ -1,0 +1,105 @@
+.globalContainer {
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #666;
+}
+
+.tagline {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: red;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.searchSection {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.searchButton {
+  padding: 12px 18px;
+  font-size: 16px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.unitSelector {
+  margin-left: auto;
+  font-size: 16px;
+  color: white;
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.tabList {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+  border-bottom: 1px solid #444;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  color: #aaa;
+  border-bottom: 3px solid transparent;
+}
+
+.activeTab {
+  color: white;
+  border-color: white;
+}
+
+.tabContent {
+  padding: 20px 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.dataCard {
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 12px;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 10px;
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <g stroke="#00fff7" stroke-width="0.3" fill="none" opacity="0.2">
+    <circle cx="50" cy="50" r="30" />
+    <circle cx="50" cy="50" r="45" stroke-dasharray="3 2" />
+    <line x1="0" y1="50" x2="100" y2="50" />
+    <line x1="50" y1="0" x2="50" y2="100" />
+    <polyline points="10,10 20,10 20,20" />
+    <polyline points="90,10 80,10 80,20" />
+    <polyline points="10,90 20,90 20,80" />
+    <polyline points="90,90 80,90 80,80" />
+  </g>
+</svg>
